@@ -1,54 +1,53 @@
-#ifndef __DATE_H__
-#define __DATE_H__
-
-#include<iostream>
+#pragma once
+#include <iostream>
 using namespace std;
 
 class Date
 {
 public:
-	Date(int y, int m, int d);
-
-	Date operator+ (int day);
-	Date operator+= (int day);
-
-	Date operator- (int day);
-	Date operator-= (int day);
-
-	Date operator++ ();
-	Date operator++ (int);
-
-	Date operator-- ();
-	Date operator-- (int);
-
-	int operator-(const Date& d);
-private:
-	bool IsLeapYear(int year)
+	Date(int year = 1600, int month = 1, int day = 1)
 	{
-		if((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
-		{
-			return true;
-		}
-		return false;
+		_year = year;
+		_month = month;
+		_day = day;
 	}
-	int GetMonthDay(int year, int month)
+	Date(const Date& d)
 	{
-		int MonthArray[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-		if(month == 2 && IsLeapYear(year))
-		{
-			return 29;
-		}
-		else
-		{
-			return MonthArray[month - 1];
-		}
+		_year = d._year;
+		_month = d._month;
+		_day = d._day;
 	}
+
+public:
+	bool operator==(const Date& d);
+	bool operator<(const Date& d);
+	bool operator<=(const Date& d);
+	bool operator>(const Date& d);
+	bool operator>=(const Date& d);
+	Date& operator=(const Date& d);
+	//日期计算器
+	Date operator+(int day);
+	Date operator+=(int day);
+	Date operator-(int day);
+	Date operator-=(int day);
+	Date operator++();
+	Date operator++(int);
+	Date operator--();
+	Date operator--(int);
+
+	void Display()
+	{
+		cout<<_year<<"年"<<_month<<"月"<<_day<<"日"<<endl;
+	}
+
+
+
 private:
+	bool IsLeap(int year);//检查闰年
+	int DayOfMonth(const Date& d);
+private:
+	int _year;
+	int _month;
+	int _day;
 
-	int year;
-	int month;
-	int day;
-}
-
-#endif
+};

@@ -10,13 +10,19 @@ public:
 		_year = year;
 		_month = month;
 		_day = day;
+		if (month > 12 || day > DayOfMonth(*this))
+		{
+			cout << "输入日期不合法" << endl;
+		}
 	}
+
 	Date(const Date& d)
 	{
 		_year = d._year;
 		_month = d._month;
 		_day = d._day;
 	}
+	Date& operator=(const Date& d);
 
 public:
 	bool operator==(const Date& d);
@@ -24,27 +30,27 @@ public:
 	bool operator<=(const Date& d);
 	bool operator>(const Date& d);
 	bool operator>=(const Date& d);
-	Date& operator=(const Date& d);
 	//日期计算器
 	Date operator+(int day);
 	Date operator+=(int day);
 	Date operator-(int day);
 	Date operator-=(int day);
-	Date operator++();
+	Date& operator++();
 	Date operator++(int);
-	Date operator--();
+	Date& operator--();
 	Date operator--(int);
+
+	int operator-(const Date& d);  //计算两个日期之间相隔的天数
+
 
 	void Display()
 	{
 		cout<<_year<<"年"<<_month<<"月"<<_day<<"日"<<endl;
 	}
 
-
-
 private:
 	bool IsLeap(int year);//检查闰年
-	int DayOfMonth(const Date& d);
+	int DayOfMonth(const Date& d); //计算该日期中当月的天数
 private:
 	int _year;
 	int _month;

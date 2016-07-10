@@ -4,6 +4,7 @@ using namespace std;
 
 class Date
 {
+	friend void PrintCalendar(int year, int month);
 public:
 	Date(int year = 1600, int month = 1, int day = 1)
 	{
@@ -42,7 +43,6 @@ public:
 
 	int operator-(const Date& d);  //计算两个日期之间相隔的天数
 
-
 	void Display()
 	{
 		cout<<_year<<"年"<<_month<<"月"<<_day<<"日"<<endl;
@@ -57,3 +57,5 @@ private:
 	int _day;
 
 };
+
+void PrintCalendar(int year, int month);  //打印日历

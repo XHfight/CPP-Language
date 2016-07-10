@@ -359,7 +359,56 @@ int Date::DayOfMonth(const Date& d)   //返回该月的天数
 	return day[d._month];
 }
 
+int MonthOfOneDay(int year, int month) //计算当前月的第一天为星期几
+{
+	if (year >= 1600 && month >= 1)
+	{
+		int week = 6;//1600.1.1  为周六
+		int day = 0;
+		Date d1(1600,1,1);
+		Date d2(year, month, 1);
+		day = d2 - d1;
+		week = day % 7 + week;
+		if (week > 7)
+		{
+			week -= 7;
+		}
+		return week;
+	}
+}
 
+void PrintCalendar(int year, int month) //打印当前月的日历
+{
+	cout << year << "年" << month << "月" << endl;
+	cout << "日 " << "一 " << "二 " << "三 " << "四 " << "五 " << "六 " << endl;
+	int week = MonthOfOneDay(year, month);
+	Date d(year, month, 1);
+	int day = 1;
+	int i = 0;
+	for (i = 0; i < week; i++)
+	{
+		cout << "   ";
+	}
+	for (int j = 0; j < 6; j++)
+	{
+
+		for (; i < 7; i++)
+		{
+			if (day <= d.DayOfMonth(d))
+			{
+				printf("%2d ",day);
+				day++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		i = 0;
+		cout << endl;
+	}
+	
+}
 
 
 

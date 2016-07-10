@@ -4,8 +4,10 @@ using namespace std;
 
 void Test1()  // +  +=
 {
-	Date d1(2000, 2, 29);
+	Date d1(2016, 5, 1);
 	d1.Display();
+	Date ret = d1 + 40;
+	ret.Display();
 //	d1+=365;
 //	d1.Display();
 }
@@ -56,13 +58,19 @@ void Test5()
 	cout << day << endl;
 }
 
+void Test6()
+{
+	PrintCalendar(2016, 2);
+}
 int main()
 {
 //	Test1();
 //	Test2();
 //	Test3();
 //	Test4();
-	Test5();
+//	Test5();
+	Test6();
+	system("color 02");
 	system("pause");
 	return 0;
 }

@@ -1,76 +1,79 @@
 #include <iostream>
 #include "Date.h"
-using namespace std;
 
-void Test1()  // +  +=
+void fun1() //日期加减天数
 {
-	Date d1(2016, 5, 1);
-	d1.Display();
-	Date ret = d1 + 40;
-	ret.Display();
-//	d1+=365;
-//	d1.Display();
+	Date date;
+	int day;
+	cout << "请输入日期" << endl;
+	cin >> date;
+	cout << "请输入加减的天数（减法输入负数即可）" << endl;
+	cin >> day;
+	cout << date+day << endl;
 }
 
-void Test2()  // -   -=
+void fun2() //计算两个日期相差天数
 {
-	Date d1(1995, 6, 8);
-	d1 -= 8;
-	d1.Display();
+	Date d1;
+	Date d2;
+	cout << "请输入第一个日期" << endl;
+	cin >> d1;
+	cout << "请输入第二个日期" << endl;
+	cin >> d2;
+	cout << "相差天数为：" << d1-d2 << endl;
 }
 
-void Test3() //++  ++(int)
+void fun3()
 {
-//	Date d(2000, 12, 31);
-	Date d(2000, 5, 31);
-//	++d;
-	d++.Display();
-	d.Display();
+	int year = 0;
+	int month = 0;
+	cout << "请输入要打印的年份和月份" << endl;
+	cin >> year >> month;
+	PrintCalendar(year, month);
+}
+void Print()
+{
+	cout << "*****************************" << endl;
+	cout << "***请选择您要使用的功能：" << endl;
+	cout << "***1. 日期加减天数" << endl;
+	cout << "***2. 计算两个日期相差天数" << endl;
+	cout << "***3. 打印某年某月的日历" << endl;
+	cout << "***0. 退出" << endl;
+	cout << "*****************************" << endl;
+
 }
 
-void Test4()   //-- --(int)
+void Menu()
 {
-//	Date d(2016, 1, 1);
-//	Date d(2016, 5, 31);
-	Date d(2015, 3, 1);
-
-//	--d;
-	d--.Display();
-	d.Display();
+	while (1)
+	{
+		Print();
+		int choose = 0;
+		cin >> choose;
+		switch (choose)
+		{
+		case 1:
+			fun1();
+			break;
+		case 2:
+			fun2();
+			break;
+		case 3:
+			fun3();
+			break;
+		case 0:
+			exit(EXIT_SUCCESS);
+			break;
+		default:
+			cout << "输入有误，请重新输入" << endl;
+			break;
+		}
+	}
 }
 
-void Test5()
-{
-	int day = 0;
-
-	//Date d1(2016, 2, 16);
-	//Date d2(2016, 2, 28);
-	//day = d1 - d2;
-
-	//Date d1(2016, 3, 26);
-	//Date d2(2016, 2, 28);
-	//day = d1 - d2;
-
-	Date d1(2016, 2, 16);
-	Date d2(2015, 2, 12);
-	day = d1 - d2;
-
-	cout << day << endl;
-}
-
-void Test6()
-{
-	PrintCalendar(2016, 2);
-}
 int main()
 {
-//	Test1();
-//	Test2();
-//	Test3();
-//	Test4();
-//	Test5();
-	Test6();
-	system("color 02");
-	system("pause");
+	Menu();
 	return 0;
 }
+

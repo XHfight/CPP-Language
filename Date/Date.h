@@ -4,16 +4,22 @@ using namespace std;
 
 class Date
 {
-	friend void PrintCalendar(int year, int month);
+public:
+	friend void PrintCalendar(int year, int month);  //打印日历
+	friend istream& operator>>(istream& is, Date& d);
+	friend ostream& operator<<(ostream& os, Date& d);
 public:
 	Date(int year = 1600, int month = 1, int day = 1)
+		:_year(year)
+		,_month(month)
+		, _day(day)
 	{
-		_year = year;
-		_month = month;
-		_day = day;
-		if (month > 12 || day > DayOfMonth(*this))
+		if (Illegal())
 		{
 			cout << "输入日期不合法" << endl;
+			_year = 1600;
+			_month = 1;
+			_day = 1;
 		}
 	}
 
@@ -23,10 +29,12 @@ public:
 		_month = d._month;
 		_day = d._day;
 	}
+
 	Date& operator=(const Date& d);
 
 public:
 	bool operator==(const Date& d);
+	bool operator!=(const Date& d);
 	bool operator<(const Date& d);
 	bool operator<=(const Date& d);
 	bool operator>(const Date& d);
@@ -43,14 +51,12 @@ public:
 
 	int operator-(const Date& d);  //计算两个日期之间相隔的天数
 
-	void Display()
-	{
-		cout<<_year<<"年"<<_month<<"月"<<_day<<"日"<<endl;
-	}
-
 private:
+	bool Illegal(); //检查日期是否非法
+	void ChangeLegal(Date& date); //将日期化为合法日期
 	bool IsLeap(int year);//检查闰年
-	int DayOfMonth(const Date& d); //计算该日期中当月的天数
+	int DayOfMonth(int year, int month); //计算该日期中当月的天数
+
 private:
 	int _year;
 	int _month;
@@ -59,3 +65,5 @@ private:
 };
 
 void PrintCalendar(int year, int month);  //打印日历
+istream& operator>>(istream& is, Date& d);
+ostream& operator<<(ostream& os, Date& d);

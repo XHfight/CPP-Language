@@ -4,7 +4,6 @@ using namespace std;
 
 class Date
 {
-public:
 	friend void PrintCalendar(int year, int month);  //´òÓ¡ÈÕÀú
 	friend istream& operator>>(istream& is, Date& d);
 	friend ostream& operator<<(ostream& os, Date& d);

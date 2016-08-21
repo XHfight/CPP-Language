@@ -71,6 +71,7 @@ String& String::operator+= ( const char* s )
 	_str[_size] = '\0';
 	return *this;
 }
+
 String& String::operator+= ( char c )
 {
 	CheckCapacity(1);
@@ -78,6 +79,7 @@ String& String::operator+= ( char c )
 	_str[_size] = '\0';
 	return *this;
 }
+
 const char *String::c_str() const
 {
 	return _str;

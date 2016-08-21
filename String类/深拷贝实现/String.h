@@ -2,7 +2,7 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <iostream>
-#include <string>
+#include <cstring>
 using namespace std;
 
 class String
@@ -37,12 +37,11 @@ public:
 
 	String& operator=(String s)
 	{
-		if(this != &s) //避免自己给自己赋值
-		{
-			swap(_str, s._str);
-			_size = s._size;
-			_capacity = s._capacity;
-		}
+
+		swap(_str, s._str);
+		_size = s._size;
+		_capacity = s._capacity;
+		
 		return *this;
 	}
 

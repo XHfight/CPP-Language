@@ -37,11 +37,12 @@ public:
 
 	String& operator=(String s)
 	{
-
-		swap(_str, s._str);
-		_size = s._size;
-		_capacity = s._capacity;
-		
+		if(_str != s._str)
+		{
+			swap(_str, s._str);
+			_size = s._size;
+			_capacity = s._capacity;
+		}
 		return *this;
 	}
 

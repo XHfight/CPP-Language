@@ -33,7 +33,7 @@ public:
 		, _tail(0)
 	{}
 
-	LinkList(const LinkList<T>& l)
+	LinkList(const LinkList& l)
 		:_head(0)
 		, _tail(0)
 	{
@@ -104,7 +104,9 @@ public:
 
 	void Insert(Node<T>* pos, T data);
 	void Erase(Node<T>* pos);
-
+	void Swap(LinkList& l);
+	void Clear();
+	Node<T>* find(const T& data);
 private:
 	Node<T>* _head;
 	Node<T>* _tail;
@@ -223,18 +225,93 @@ void LinkList<T>::Insert(Node<T>* pos, T data)
 	}
 }
 
-template<class T>
-void LinkList<T>::Erase(Node<T>* pos)
+//有问题
+//template<class T>
+//void LinkList<T>::Erase(Node<T>* pos)
+//{
+//	Node<T>* cur = _head;
+//	if (pos == _head)//删头节点
+//	{
+//		if (_head->_next == NULL) //只有一个节点
+//		{
+//			delete _head;
+//			_head = NULL;
+//			_tail = NULL;
+//		}
+//		else  //多个节点
+//		{
+//			Node<T>* del = _head;
+//			_head = _head->_next;
+//			delete del;
+//			del = NULL;
+//		}
+//	}
+//	else
+//	{
+//		while (cur && cur->_next != pos)
+//		{
+//			cur = cur->_next;
+//		}
+//
+//		if (cur != NULL)
+//		{
+//			if (pos->_next == NULL)//删尾结点
+//			{
+//				delete pos;
+//				pos = NULL;
+//				_tail = cur;
+//			}
+//			else
+//			{
+//				cur->_next = pos->_next;
+//				delete pos;
+//				pos = NULL;
+//			}
+//		}
+//	}
+//}
+
+template <class T>
+void LinkList<T>::Swap(LinkList& l)
+{
+	swap(_head, l._head);
+	swap(_tail, l._tail);
+
+	//自己实现
+	/*Node<T>* tmp = l._head;
+	l._head = _head;
+	_head = tmp;
+
+	tmp = l._tail;
+	l._tail = _tail;
+	_tail = tmp;*/
+}
+template <class T>
+void LinkList<T>::Clear()
 {
 	Node<T>* cur = _head;
-	while (cur->_next != pos && cur)
+	while (cur)
 	{
+		Node<T>* del = cur;
+		cur = cur->_next;
+		delete del;
+		del = NULL;
+	}
+	_head = NULL;
+	_tail = NULL;
+}
+
+template <class T>
+Node<T>* LinkList<T>::find(const T& data)
+{
+	Node<T>* cur = _head;
+	while (cur)
+	{
+		if (cur->_data == data)
+		{
+			return cur;
+		}
 		cur = cur->_next;
 	}
-
-	if (cur->_next == pos)
-	{
-		cur->_next = pos->_next;
-		delete pos;
-	}
+	return NULL;
 }

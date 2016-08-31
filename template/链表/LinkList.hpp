@@ -225,51 +225,44 @@ void LinkList<T>::Insert(Node<T>* pos, T data)
 	}
 }
 
-//有问题
-//template<class T>
-//void LinkList<T>::Erase(Node<T>* pos)
-//{
-//	Node<T>* cur = _head;
-//	if (pos == _head)//删头节点
-//	{
-//		if (_head->_next == NULL) //只有一个节点
-//		{
-//			delete _head;
-//			_head = NULL;
-//			_tail = NULL;
-//		}
-//		else  //多个节点
-//		{
-//			Node<T>* del = _head;
-//			_head = _head->_next;
-//			delete del;
-//			del = NULL;
-//		}
-//	}
-//	else
-//	{
-//		while (cur && cur->_next != pos)
-//		{
-//			cur = cur->_next;
-//		}
-//
-//		if (cur != NULL)
-//		{
-//			if (pos->_next == NULL)//删尾结点
-//			{
-//				delete pos;
-//				pos = NULL;
-//				_tail = cur;
-//			}
-//			else
-//			{
-//				cur->_next = pos->_next;
-//				delete pos;
-//				pos = NULL;
-//			}
-//		}
-//	}
-//}
+template<class T>
+void LinkList<T>::Erase(Node<T>* pos)
+{
+	Node<T>* cur = _head;
+	if (_head ->_next == NULL)//只有一个结点
+	{
+		if (pos == _head)
+		{
+			delete _head;
+			_head = NULL;
+			_tail = NULL;
+		}
+	}
+	else
+	{
+		if (pos == _head)
+		{
+			Node<T>* del = _head;
+			_head = _head->_next;
+			delete del;
+			del = NULL;
+		}
+		else
+		{
+			Node<T>* cur = _head;
+			while (cur->_next != pos)
+			{
+				cur = cur->_next;
+			}
+			cur->_next = pos->_next;
+			delete pos;
+			if (pos == _tail)
+			{
+				_tail = cur;
+			}
+		}
+	}
+}
 
 template <class T>
 void LinkList<T>::Swap(LinkList& l)

@@ -44,9 +44,11 @@ public:
 		return *this;
 	}
 
-	void* release()
+	T* release()
 	{
-		return (void*)_ptr;
+		T* tmp = _ptr;
+		_ptr = NULL;
+		return tmp;
 	}
 
 	void reset(T* ptr)

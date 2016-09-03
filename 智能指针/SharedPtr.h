@@ -8,6 +8,7 @@ class SharedPtr
 public:
 	SharedPtr(T* ptr)
 		:_ptr(ptr)
+		:_PCount(new int(1))
 	{}
 	SharedPtr(const SharedPtr<T>& shp)
 		:_ptr(shp._ptr)

@@ -6,7 +6,6 @@ struct DefaultDel
 {
 	void operator()(void *ptr)
 	{
-		cout<<"del"<<endl;
 		delete ptr;
 	}
 };

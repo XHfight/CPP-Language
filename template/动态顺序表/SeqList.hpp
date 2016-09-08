@@ -19,7 +19,7 @@ public:
 		, _capacity(seq._capacity)
 		,_size(seq._size)
 	{
-		//不能用memcpy，对于非内置类型，可能出现浅拷贝问题。
+		//不能用memcpy，对于存在深浅拷贝的非内置类型，可能出现浅拷贝问题。
 		for (int i = 0; i < _size; i++)
 		{
 			_data[i] = seq._data[i];

@@ -17,7 +17,8 @@ struct FalseType
 template <class T>
 struct TypeTraits
 {
-	typedef FalseType IsPODType; //嵌套类型声明
+	 //嵌套类型声明
+	typedef FalseType IsPODType;
 };
 
 template <>

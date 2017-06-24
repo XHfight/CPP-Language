@@ -12,7 +12,7 @@ void StudentInformation::OutputFile(ofstream &ouf)
 	}
 }
 
-
+//向文件中写入数据
 void StudentScore::OutputFile(ofstream &ouf)
 {
 	StudentScoreNode *cur = _slist;
@@ -38,6 +38,13 @@ void StudentScore::OutputFile(ofstream &ouf)
 		str+=" ";
 		sprintf(arr, "%d", cur->_grade_j);
 		str+=arr;
+		str+=" ";
+		sprintf(arr, "%d", cur->_grade_all);
+		str+=arr;
+		str+=" ";
+		sprintf(arr, "%d", cur->_credit_act);
+		str+=arr;
+
 		ouf << str << endl;
 	
 		cur = cur->_next;
@@ -47,29 +54,17 @@ void StudentScore::OutputFile(ofstream &ouf)
 //读取A文件的信息，并调用Insert函数插入到链表中。
 void StudentInformation::Init()
 {
-	ifstream inf ("A.txt",  ios::binary);
+	ifstream inf ("A.txt", ios::binary);
 	if(!inf)
 	{
 		cout << "cannot open file" << endl;
 		exit(1);
 	}
-	char ch;
 	string str;
-	while(inf.get(ch))
+	while(getline(inf, str))
 	{
-		if(ch == '\n')
-		{
-			//读取到一行的内容
-			//插入链表
-			Insert(str);
-
-		//	cout << str << endl;
-			str = "";
-			continue;
-		}
-		str += ch;
+		Insert(str);
 	}
-	Insert(str);
 	inf.close();
 }
 
@@ -99,7 +94,7 @@ void StudentInformation::Insert(string str)
 	
 	size_t id = atoi(arr[0]);
 	string name(arr[1]);
-	char sex[2];
+	char sex[6];
 	strcpy(sex, arr[2]);
 	size_t homeNum  = atoi(arr[3]);
 	string telephone(arr[4]);
@@ -208,7 +203,6 @@ void StudentScore::Init()
 		string line;
 		while(getline(inf, line))
 		{
-			cout << line << endl;
 			Insert(line);
 		}
 	}
@@ -219,7 +213,7 @@ void StudentScore::Insert(string str)
 {
 	char s[256];
 	strcpy(s, str.c_str());
-	char* arr[7] = {0}; 
+	char* arr[9] = {0}; 
 	
 	int i = 0;   //访问字符数组s
 	int index = 0; //访问arr数组
@@ -245,21 +239,21 @@ void StudentScore::Insert(string str)
 	int grade_p = atoi(arr[4]);
 	int grade_s = atoi(arr[5]);
 	int grade_j = atoi(arr[6]);
-//	int grade_all = atoi(arr[7]);
-//	int credit_act = atoi(arr[8]);
-	cout << "id: " << id << endl;
-	cout << "classNum: " << classNum << endl;
-	cout << "className: " << className << endl;
-	cout << "credit: " << credit << endl;
-	cout << "grade_p: " << grade_p << endl;
-	cout << "grade_s: " << grade_s << endl;
-	cout << "grade_j: " << grade_j << endl;
+	int grade_all = atoi(arr[7]);
+	int credit_act = atoi(arr[8]);
+//	cout << "id: " << id << endl;
+//	cout << "classNum: " << classNum << endl;
+//	cout << "className: " << className << endl;
+//	cout << "credit: " << credit << endl;
+//	cout << "grade_p: " << grade_p << endl;
+//	cout << "grade_s: " << grade_s << endl;
+//	cout << "grade_j: " << grade_j << endl;
 //	cout << "grade_all: " << grade_all << endl;
 //	cout << "credit_act: " << credit_act << endl;
 	if(_slist == NULL)
 	{
 		_slist = new StudentScoreNode(id, classNum, className, credit, \
-										grade_p, grade_s, grade_j, 0, 0);
+										grade_p, grade_s, grade_j, grade_all, credit_act);
 	}
 	else
 	{
@@ -270,7 +264,34 @@ void StudentScore::Insert(string str)
 		}
 		//找到最后一个结点
 		end->_next = new StudentScoreNode(id, classNum, className, credit, \
-                                           grade_p, grade_s, grade_j, 0, 0);
+                                           grade_p, grade_s, grade_j, grade_all, credit_act);
+	}
+}
+
+void StudentInformation::Delete(size_t id)
+{
+	StudentNode *cur = _list;
+	StudentNode *prev = NULL;
+	while(cur)
+	{
+		if(cur->_id == id)
+		{
+			StudentNode *del = cur;
+			if(cur == _list)
+				_list = cur->_next;
+			else
+				prev->_next = cur->_next;
+			delete del;
+			break;
+		}
+		prev = cur;
+		cur = cur->_next;
+	}
+	ofstream ouf("A.txt", ios::binary);
+	if(ouf)
+	{
+		OutputFile(ouf);
+		ouf.close();
 	}
 }
 
@@ -299,11 +320,39 @@ void StudentScore::Add()
 	cout << "examination grade:"; //卷面成绩
 	cin >> grade_j;
 
+	//计算综合成绩和实得学分
+	//1.综合成绩
+	int grade_all;
+	if(grade_s == -1)
+		grade_all = grade_p*0.3+grade_j*0.7;
+	else
+		grade_all = grade_p*0.15+grade_s*0.15+grade_j*0.7;
+	//2.实得学分
+	int credit_act; 
+	int key = grade_all/10;
+	switch(key)
+	{
+		case 10:
+		case 9:
+			credit_act = credit;
+			break;
+		case 8:
+			credit_act = credit*0.8;
+			break;
+		case 7:
+			credit_act = credit*0.75;
+			break;
+		case 6:
+			credit_act = credit*0.6;
+			break;
+		default:
+			credit_act = 0;
+	}
 	//向链表中插入结点
 	if(_slist == NULL)
 	{
 		_slist = new StudentScoreNode(id, classNum, className, credit, \
-										grade_p, grade_s, grade_j, 0, 0);
+										grade_p, grade_s, grade_j, grade_all, credit_act);
 	}
 	else
 	{
@@ -314,38 +363,175 @@ void StudentScore::Add()
 		}
 		//找到最后一个结点
 		end->_next = new StudentScoreNode(id, classNum, className, credit, \
-                                           grade_p, grade_s, grade_j, 0, 0);
+                                           grade_p, grade_s, grade_j, grade_all, credit_act);
 	}
 
 	ofstream ouf("B.txt", ios::binary);
 	if(ouf)
 	{
 		OutputFile(ouf);
-		//ouf << id << " " << classNum << " " << className << " " << credit << " " << \
-			" " << grade_p << " " << grade_s << " " << grade_j << endl;
 		ouf.close();
 	}
 }
 
-void StudentScore::Delete()
+void StudentScore::Delete(size_t id)
 {
-
+	StudentScoreNode *cur = _slist;
+	StudentScoreNode *prev = NULL;
+	while(cur)
+	{
+		if(cur->_id == id)
+		{
+			StudentScoreNode *del = cur;
+			if(cur == _slist)
+			{
+				_slist = cur->_next;
+				cur = _slist;
+			}
+			else
+			{
+				prev->_next = cur->_next;
+				cur = cur->_next;
+			}
+			delete del;
+			continue;
+		}
+		prev = cur;
+		cur = cur->_next;
+	}
+	//将修改后的内容写入文件
+	ofstream ouf("B.txt", ios::binary);
+	if(ouf)
+	{
+		OutputFile(ouf);
+		ouf.close();
+	}
 }
 
-void StudentScore::Search()
+
+void StudentScore::Search(StudentInformation &si)
 {
 	size_t id;
 	cout << "please enter id:";
 	cin >> id;
 	StudentScoreNode *cur = _slist;
-	cout << "id:" << id << "name:" 
+
+	StudentNode *ret = Search_id(si, id);
+	cout << "id:" << id << "	" << "name:" << ret->_name << endl;  
 	while(cur)
 	{
 		if(cur->_id == id)
 		{
-			cout << id << " " << cur->_classNum << " " << cur->_className << " " << cur->_credit << " " << \
-				" " << cur->_grade_p << " " << cur->_grade_s << " " << cur->_grade_j << endl;
+			cout << "classn_umber: " << cur->_classNum << " " << "class_name:" << cur->_className << \
+				" " << "overall_score:" << cur->_grade_all << " "  << "actual_credits:"<< cur->_credit_act << endl;
 		}
+		cur = cur->_next;
 	}
+}
 
+//按综合成绩排序-->升序
+void StudentScore::Sort_sec()
+{
+	StudentScoreNode *p, *next;
+	if(_slist->_next == NULL)
+		return;
+	int size = 0;
+	//找尾指针
+	for(p = _slist; p!= NULL; p = p->_next)
+		++size;
+	
+	p = _slist;
+	for(int i = 0; i < size; ++i)
+	{
+		while(p->_next != NULL)
+		{
+			next = p->_next;
+			if(p->_grade_all < next->_grade_all)
+			{
+				swap(p->_id, next->_id);
+				swap(p->_classNum, next->_classNum);
+				swap(p->_className, next->_className);
+				swap(p->_credit, next->_credit);
+				swap(p->_grade_p, next->_grade_p);
+				swap(p->_grade_s, next->_grade_s);
+				swap(p->_grade_j, next->_grade_j);
+				swap(p->_grade_all, next->_grade_all);
+				swap(p->_credit_act, next->_credit_act);
+			}
+			p = p->_next;
+		}
+		p = _slist;
+	}
+}
+
+void StudentScore::Sort_cre()
+{
+	StudentScoreNode *p, *next;
+	if(_slist->_next == NULL)
+		return;
+	int size = 0;
+	//找尾指针
+	for(p = _slist; p!= NULL; p = p->_next)
+		++size;
+	
+	p = _slist;
+	for(int i = 0; i < size; ++i)
+	{
+		while(p->_next != NULL)
+		{
+			next = p->_next;
+			if(p->_credit_act < next->_credit_act)
+			{
+				swap(p->_id, next->_id);
+				swap(p->_classNum, next->_classNum);
+				swap(p->_className, next->_className);
+				swap(p->_credit, next->_credit);
+				swap(p->_grade_p, next->_grade_p);
+				swap(p->_grade_s, next->_grade_s);
+				swap(p->_grade_j, next->_grade_j);
+				swap(p->_grade_all, next->_grade_all);
+				swap(p->_credit_act, next->_credit_act);
+			}
+			p = p->_next;
+		}
+		p = _slist;
+	}
+}
+
+void StudentScore::Print()
+{
+	StudentScoreNode *cur = _slist;
+	while(cur)
+	{
+		string str;
+		char arr[10];
+		sprintf(arr, "%d", (int)cur->_id);
+		str+=arr;
+		str+=" ";
+		str+=cur->_classNum;
+		str+=" ";
+		str+=cur->_className;
+		str+=" ";
+		sprintf(arr, "%d", cur->_credit);
+		str+=arr;
+		str+=" ";
+		sprintf(arr, "%d", cur->_grade_p);
+		str+=arr;
+		str+=" ";
+		sprintf(arr, "%d", cur->_grade_s);
+		str+=arr;
+		str+=" ";
+		sprintf(arr, "%d", cur->_grade_j);
+		str+=arr;
+		str+=" ";
+		sprintf(arr, "%d", cur->_grade_all);
+		str+=arr;
+		str+=" ";
+		sprintf(arr, "%d", cur->_credit_act);
+		str+=arr;
+
+		cout << str << endl;
+	
+		cur = cur->_next;
+	}
 }

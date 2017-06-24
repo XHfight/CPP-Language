@@ -62,14 +62,8 @@ struct StudentScoreNode  //存储学生成绩信息
 class StudentSystem
 {
 public:
-	virtual void Search()
-	{
-		cout << "StudentSystem::Search()" << endl;
-	}
-	virtual void Delete()
-	{
-		cout << "StudentSystem::Delete()" << endl;
-	}
+	virtual void Delete(size_t id)
+	{}
 };
 
 class StudentInformation: public StudentSystem
@@ -94,7 +88,7 @@ public:
 
 	void Init();
 	void Search();
-//	void Delete();
+	void Delete(size_t id);
 
 private:
 	void OutputFile(ofstream &ouf);
@@ -122,15 +116,17 @@ public:
 		_slist = NULL;
 	}
 	void Init();
-	void Search();
-	void Delete();
+	void Search(StudentInformation &si);
+	void Delete(size_t id);
 	void Add();
-	void Sort();
+	void Sort_sec();
+	void Sort_cre();
+	void Print();
 private:
 	void OutputFile(ofstream &ouf);
 	void Insert(string str);
 private:
-		StudentScoreNode *_slist; //链表，存储学生的成绩信息
+	StudentScoreNode *_slist; //链表，存储学生的成绩信息
 };
 
 #endif

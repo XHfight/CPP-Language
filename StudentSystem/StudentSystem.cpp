@@ -381,6 +381,12 @@ void StudentScore::Search(StudentInformation &si)
 	StudentScoreNode *cur = _slist;
 
 	StudentNode *ret = Search_id(si, id);
+	if(ret == NULL)
+	{
+		cout << "not find!!!" << endl;
+		return;
+	}
+
 	cout << "id:" << id << "	" << "name:" << ret->_name << endl;  
 	while(cur)
 	{

@@ -7,7 +7,7 @@ void StudentInformation::OutputFile(ofstream &ouf)
 	while(cur)
 	{
 	 	ouf << cur->_id << " " << cur->_name << " " << cur->_sex << " " << cur->_homeNum << " " \
-			<< cur->_telephone << endl;
+			<< cur->_telephone << "\r\n";
 		cur = cur->_next;
 	}
 }
@@ -18,35 +18,8 @@ void StudentScore::OutputFile(ofstream &ouf)
 	StudentScoreNode *cur = _slist;
 	while(cur)
 	{
-		string str;
-		char arr[10];
-		sprintf(arr, "%d", (int)cur->_id);
-		str+=arr;
-		str+=" ";
-		str+=cur->_classNum;
-		str+=" ";
-		str+=cur->_className;
-		str+=" ";
-		sprintf(arr, "%d", cur->_credit);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_p);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_s);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_j);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_all);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_credit_act);
-		str+=arr;
+		ouf << cur->_id << " " << cur->_classNum << " " << cur->_className << " " << cur->_credit << " " << cur->_grade_p << " " << cur->_grade_s << " " << cur->_grade_j << " " << cur->_grade_all << " " << cur->_credit_act << "\r\n";
 
-		ouf << str << endl;
-	
 		cur = cur->_next;
 	}
 }
@@ -136,63 +109,54 @@ StudentNode *Search_id(const StudentInformation &si, size_t id)
 
 void StudentInformation::Search()
 {
-	cout << "please enter find method: 1.use id 2.use homeNumber 0.exit" << endl;
-	while(1)
+	cout << "please enter find method: 1.use id 2.use homeNumber " << endl;
+	
+	int search;
+	cin >> search;
+	if(search == 1)
 	{
-		int search;
-		cin >> search;
-		switch(search)
+		cout << "please enter id: " << endl;
+		size_t id;
+		cin >> id;
+		StudentNode *ret = Search_id(*this, id);
+		if(ret != NULL)
 		{
-		case 1:
-			{
-				cout << "please enter id: " << endl;
-				size_t id;
-				cin >> id;
-				StudentNode *ret = Search_id(*this, id);
-				if(ret != NULL)
-				{
-					cout << "id: " << ret->_id << endl;
-					cout << "name: " << ret->_name << endl;
-					cout << "sex: " << ret->_sex << endl;
-					cout << "homeNum: " << ret->_homeNum << endl;
-					cout << "telephone: " << ret->_telephone << endl;
-				}
-				else
-					cout << "not find !!!" << endl;	
-			}
-			break;
-		case 2:
-			{
-				cout << "please enter homeNumber:"  << endl;
-				size_t homeNum;
-				cin >> homeNum;
-				int flag = 0; //标志是否找到
-				StudentNode *cur = _list;
-				while(cur != NULL)
-				{
-					if(cur->_homeNum == homeNum)
-					{
-						flag = 1;
-						cout << "id: " << cur->_id << endl;
-						cout << "name: " << cur->_name << endl;
-						cout << "sex: " << cur->_sex << endl;
-						cout << "homeNum: " << cur->_homeNum << endl;
-						cout << "telephone: " << cur->_telephone << endl;
-					}
-					cur = cur->_next;
-				}
-				
-				if(flag == 0)	
-					cout << "not find !!!" << endl;	
-			}
-			break;
-		case 0:
-			return;
-			break;
-		default:
-			cout << "Input error, please enter again!!!" << endl;
+			cout << "id: " << ret->_id << endl;
+			cout << "name: " << ret->_name << endl;
+			cout << "sex: " << ret->_sex << endl;
+			cout << "homeNum: " << ret->_homeNum << endl;
+			cout << "telephone: " << ret->_telephone << endl;
+			cout << "*************************************"<<endl;
 		}
+		else
+			cout << "not find !!!" << endl;	
 	}
+	else if(search == 2)
+	{
+		cout << "please enter homeNumber:"  << endl;
+		size_t homeNum;
+		cin >> homeNum;
+		int flag = 0; //标志是否找到
+		StudentNode *cur = _list;
+		while(cur != NULL)
+		{
+			if(cur->_homeNum == homeNum)
+			{
+				flag = 1;
+				cout << "id: " << cur->_id << endl;
+				cout << "name: " << cur->_name << endl;
+				cout << "sex: " << cur->_sex << endl;
+				cout << "homeNum: " << cur->_homeNum << endl;
+				cout << "telephone: " << cur->_telephone << endl;
+				cout << "*************************************"<<endl;
+			}
+			cur = cur->_next;
+		}
+		if(flag == 0)	
+			cout << "not find !!!" << endl;	
+	}
+	else
+			cout << "Input error, please enter again!!!" << endl;
 }
 
 void StudentScore::Init()
@@ -239,8 +203,8 @@ void StudentScore::Insert(string str)
 	int grade_p = atoi(arr[4]);
 	int grade_s = atoi(arr[5]);
 	int grade_j = atoi(arr[6]);
-	int grade_all = atoi(arr[7]);
-	int credit_act = atoi(arr[8]);
+	double grade_all = atof(arr[7]);
+	double credit_act = atof(arr[8]);
 //	cout << "id: " << id << endl;
 //	cout << "classNum: " << classNum << endl;
 //	cout << "className: " << className << endl;
@@ -322,14 +286,14 @@ void StudentScore::Add()
 
 	//计算综合成绩和实得学分
 	//1.综合成绩
-	int grade_all;
+	double grade_all;
 	if(grade_s == -1)
 		grade_all = grade_p*0.3+grade_j*0.7;
 	else
 		grade_all = grade_p*0.15+grade_s*0.15+grade_j*0.7;
 	//2.实得学分
-	int credit_act; 
-	int key = grade_all/10;
+	double credit_act; 
+	int key = (int)(grade_all/10);
 	switch(key)
 	{
 		case 10:
@@ -430,26 +394,29 @@ void StudentScore::Search(StudentInformation &si)
 }
 
 //按综合成绩排序-->升序
-void StudentScore::Sort_sec()
+//采用冒泡排序，不进行链表指向的变换，只进行数据交换
+//1.从链表头开始操作，将第一个元素和后面的比较，将大者换到后面去。反复操作直至链表尾。
+//2.链表尾提前一位（因为最后一个元素已经是最大值，无需再处理了）3。重复1，2步 ，直至链表尾等于链表头，既表明处理结束
+void StudentScore::Sort_sco()
 {
-	StudentScoreNode *p, *next;
-	if(_slist->_next == NULL)
-		return;
-	int size = 0;
-	//找尾指针
-	for(p = _slist; p!= NULL; p = p->_next)
-		++size;
+	StudentScoreNode *p, *tail, *next;
+
+	tail = NULL;
 	
-	p = _slist;
-	for(int i = 0; i < size; ++i)
+	while(tail != _slist)
 	{
-		while(p->_next != NULL)
+		p = _slist;
+		while(p != tail && p->_next != tail)
 		{
 			next = p->_next;
 			if(p->_grade_all < next->_grade_all)
 			{
 				swap(p->_id, next->_id);
-				swap(p->_classNum, next->_classNum);
+				for(int i = 0; i < sizeof(p->_classNum)/sizeof(p->_classNum[0]); ++i)
+				{
+					swap(p->_classNum[i], next->_classNum[i]);
+				}
+				//swap(p->_classNum, next->_classNum); //数组交换linux下支持，windows不支持
 				swap(p->_className, next->_className);
 				swap(p->_credit, next->_credit);
 				swap(p->_grade_p, next->_grade_p);
@@ -460,30 +427,29 @@ void StudentScore::Sort_sec()
 			}
 			p = p->_next;
 		}
-		p = _slist;
+		tail = p;
 	}
 }
 
 void StudentScore::Sort_cre()
 {
-	StudentScoreNode *p, *next;
-	if(_slist->_next == NULL)
-		return;
-	int size = 0;
-	//找尾指针
-	for(p = _slist; p!= NULL; p = p->_next)
-		++size;
+	StudentScoreNode *p, *tail, *next;
+
+	tail = NULL;
 	
-	p = _slist;
-	for(int i = 0; i < size; ++i)
+	while(tail != _slist)
 	{
-		while(p->_next != NULL)
+		p = _slist;
+		while(p != tail && p->_next != tail)
 		{
 			next = p->_next;
 			if(p->_credit_act < next->_credit_act)
 			{
 				swap(p->_id, next->_id);
-				swap(p->_classNum, next->_classNum);
+				for(int i = 0; i < sizeof(p->_classNum)/sizeof(p->_classNum[0]); ++i)
+				{
+					swap(p->_classNum[i], next->_classNum[i]);
+				}
 				swap(p->_className, next->_className);
 				swap(p->_credit, next->_credit);
 				swap(p->_grade_p, next->_grade_p);
@@ -494,7 +460,7 @@ void StudentScore::Sort_cre()
 			}
 			p = p->_next;
 		}
-		p = _slist;
+		tail = p;
 	}
 }
 
@@ -503,35 +469,7 @@ void StudentScore::Print()
 	StudentScoreNode *cur = _slist;
 	while(cur)
 	{
-		string str;
-		char arr[10];
-		sprintf(arr, "%d", (int)cur->_id);
-		str+=arr;
-		str+=" ";
-		str+=cur->_classNum;
-		str+=" ";
-		str+=cur->_className;
-		str+=" ";
-		sprintf(arr, "%d", cur->_credit);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_p);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_s);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_j);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_grade_all);
-		str+=arr;
-		str+=" ";
-		sprintf(arr, "%d", cur->_credit_act);
-		str+=arr;
-
-		cout << str << endl;
-	
+		cout << cur->_id << "	" << cur->_classNum << "	" << cur->_className << "	" << cur->_credit << "	" << cur->_grade_p << "	" << cur->_grade_s << "	" << cur->_grade_j << "	" << cur->_grade_all << "	" << cur->_credit_act << endl;
 		cur = cur->_next;
 	}
 }
